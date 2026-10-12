@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Feto-Placental Unit Practice</title>
+<style>
+:root{--red:#AB0520;--blue:#0C234B;--az:#1E5288;--pale:#E8EEF7;--ok:#1b7a3d;--okbg:#e3f4e8;--badbg:#fbe4e8}
+*{box-sizing:border-box}
+body{margin:0;font-family:Georgia,"Times New Roman",serif;background:#fff;color:#1c1c1c;line-height:1.5}
+header{background:var(--blue);color:#fff;padding:18px 20px;border-bottom:6px solid var(--red)}
+header h1{margin:0;font-size:1.5rem}
+header p{margin:4px 0 0;font-family:Arial,sans-serif;font-size:.95rem;opacity:.92}
+main{max-width:980px;margin:0 auto;padding:16px}
+button{font-family:Arial,sans-serif;cursor:pointer}
+button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+.tabs{display:flex;gap:6px;border-bottom:2px solid var(--blue);margin-bottom:14px}
+.tab{background:var(--pale);border:1px solid var(--blue);border-bottom:none;padding:9px 16px;font-size:1rem;color:var(--blue);border-radius:6px 6px 0 0}
+.tab[aria-selected="true"]{background:var(--blue);color:#fff;font-weight:bold}
+.panel[hidden]{display:none}
+.help{font-family:Arial,sans-serif;font-size:.95rem;background:var(--pale);border-left:5px solid var(--az);padding:10px 14px;margin:0 0 12px}
+.bank{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+.chip{background:#fff;border:2px solid var(--az);color:var(--blue);padding:6px 11px;border-radius:20px;font-size:.92rem}
+.chip[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff;font-weight:bold}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.btn{background:var(--blue);color:#fff;border:0;padding:9px 16px;border-radius:5px;font-size:.95rem}
+.btn.alt{background:#fff;color:var(--blue);border:2px solid var(--blue)}
+.btn.red{background:var(--red)}
+#score,#qscore{font-family:Arial,sans-serif;font-weight:bold;color:var(--blue)}
+.dwrap{overflow-x:auto;border:1px solid #c9d2e0;border-radius:6px}
+svg{display:block;width:100%;min-width:560px;height:auto;background:#fff}
+svg text{font-family:Arial,sans-serif;font-size:9.5px;fill:#1c1c1c;text-anchor:middle}
+svg .hd{font-weight:bold;font-size:12px;fill:var(--blue)}
+svg .zone{fill:none;stroke:var(--blue);stroke-width:1.2}
+svg .fx{fill:#fff;stroke:#555;stroke-width:1}
+svg .bk{fill:#fff;stroke:var(--az);stroke-width:1.5;stroke-dasharray:4 2;cursor:pointer}
+svg .bt{fill:#7a8aa6;cursor:pointer}
+svg .fill .bk{fill:var(--pale);stroke-dasharray:none}
+svg .fill .bt{fill:var(--blue);font-weight:bold}
+svg .good .bk{fill:var(--okbg);stroke:var(--ok);stroke-dasharray:none}
+svg .good .bt{fill:var(--ok);font-weight:bold}
+svg .bad .bk{fill:var(--badbg);stroke:var(--red);stroke-dasharray:none}
+svg .bad .bt{fill:var(--red);font-weight:bold}
+svg path{fill:none;stroke:#222;stroke-width:1.4}
+.q{border:1px solid #c9d2e0;border-top:5px solid var(--red);border-radius:6px;padding:14px 16px;margin:0 0 16px}
+.q h3{margin:0 0 10px;font-size:1.05rem;color:var(--blue)}
+.opt{display:block;width:100%;text-align:left;background:#fff;border:2px solid #b6c2d6;border-radius:6px;padding:9px 12px;margin:0 0 4px;font-size:.95rem}
+.opt:hover:not(:disabled){border-color:var(--red)}
+.opt:disabled{cursor:default;color:#1c1c1c}
+.opt.right{border-color:var(--ok);background:var(--okbg)}
+.opt.wrong{border-color:var(--red);background:var(--badbg)}
+.why{font-family:Arial,sans-serif;font-size:.88rem;margin:0 0 10px 6px;padding:5px 10px;border-left:4px solid #b6c2d6}
+.why.r{border-color:var(--ok)}.why.w{border-color:var(--red)}
+.why b.r{color:var(--ok)}.why b.w{color:var(--red)}
+</style>
+</head>
+<body>
+<header>
+<h1>Feto-Placental Unit: Practice</h1>
+<p>Endocrinology review. Label the pathway, then test your understanding.</p>
+</header>
+<main>
+<div class="tabs" role="tablist">
+<button class="tab" role="tab" id="t1" aria-selected="true" aria-controls="p1">Part 1: Label the pathway</button>
+<button class="tab" role="tab" id="t2" aria-selected="false" aria-controls="p2">Part 2: Quiz</button>
+</div>
+
+<section class="panel" id="p1" role="tabpanel">
+<p class="help">Select a word from the word bank (it turns red), then select a dashed box in the diagram to place it. Words can be used more than once. Select a filled box with no word selected to clear it.</p>
+<div class="bank" id="bank"></div>
+<div class="dwrap"><svg id="dg" viewBox="0 0 600 680" role="group" aria-label="Feto-placental unit steroid pathway diagram"></svg></div>
+<div class="bar">
+<button class="btn red" id="chk">Check answers</button>
+<button class="btn alt" id="show">Show answers</button>
+<button class="btn alt" id="rst">Reset</button>
+<span id="score" aria-live="polite"></span>
+</div>
+</section>
+
+<section class="panel" id="p2" role="tabpanel" hidden>
+<p class="help">Choose one answer for each question. You will see the correct answer and why each choice is right or wrong.</p>
+<div id="quiz"></div>
+<div class="bar"><span id="qscore" aria-live="polite"></span><button class="btn alt" id="qrst" hidden>Try again</button></div>
+</section>
+</main>
+
+<script>
+/* ---------- Tabs ---------- */
+["t1","t2"].forEach(function(id){
+  document.getElementById(id).onclick=function(){
+    ["t1","t2"].forEach(function(o){
+      var on=o===id;
+      document.getElementById(o).setAttribute("aria-selected",on);
+      document.getElementById(document.getElementById(o).getAttribute("aria-controls")).hidden=!on;
+    });
+  };
+});
+
+/* ---------- Part 1: diagram ---------- */
+var NS="http://www.w3.org/2000/svg";
+var WORDS=["Adrenal gland","Androstenedione","Aromatase","DHEA","E1 (estrone)","E2 (estradiol)","E3 (estriol)","16a-Hydroxylase","17a-Hydroxylase","Liver","Pregnenolone","SCC","Sulfatase"];
+var short=function(w){return w.replace(/ \(.*\)/,"");};
+/* [centerX, centerY, width, answer] */
+var BLANKS=[
+[232,108,40,"SCC"],[264,139,88,"Pregnenolone"],[218,245,66,"Sulfatase"],[265,272,48,"DHEA"],
+[265,325,104,"Androstenedione"],[305,352,72,"Aromatase"],[172,371,40,"E1 (estrone)"],[172,430,40,"E2 (estradiol)"],
+[211,485,66,"Sulfatase"],[215,593,72,"Aromatase"],[172,621,40,"E3 (estriol)"],
+[466,139,88,"Pregnenolone"],[465,188,88,"Pregnenolone"],[526,215,106,"17a-Hydroxylase"],[466,290,48,"DHEA"],
+[539,320,76,"Adrenal gland"],[526,437,106,"16a-Hydroxylase"],[540,509,70,"Liver"]];
+var LABELS=[
+[67,42,"Mother","hd"],[248,42,"Placenta","hd"],[490,42,"Fetus","hd"],
+[67,82,"Cholesterol"],[262,82,"Cholesterol"],[262,197,"Progesterone"],[264,221,"DHEA-S"],
+[466,239,"17\u03B1OH-Pregnenolone"],[466,340,"DHEA-S"],[466,414,"DHEA-S"],[466,463,"16\u03B1OH-DHEA-S"],
+[259,463,"16\u03B1OH-DHEA-S"],[259,518,"16\u03B1OH-DHEA"],[256,567,"16\u03B1OH-Androstenedione"],
+[229,396,"17\u03B2-Hydroxysteroid"],[229,407,"dehydrogenase"]];
+var ARROWS=[
+"M112 84H205","M262 92V124","M262 154V180","M211 199H62","M308 139H422","M465 151V177","M465 202V231",
+"M465 247V274","M465 304V329","M435 340H366V222H297","M465 351V401","M465 424V449","M416 463H312",
+"M262 232V259","M262 285V312","M265 337V371H192","M156 371H58","M169 385V413","M156 430H58",
+"M257 472V502","M254 528V553","M257 578V621H192","M156 621H66"];
+
+var svg=document.getElementById("dg");
+function el(n,a,p){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e;}
+var defs=el("defs",{});
+var mk=el("marker",{id:"ah",viewBox:"0 0 10 10",refX:"9",refY:"5",markerWidth:"6",markerHeight:"6",orient:"auto-start-reverse"},defs);
+el("path",{d:"M0 0L10 5L0 10z",fill:"#222",stroke:"none"},mk);
+el("rect",{"class":"zone",x:120,y:62,width:232,height:587});
+el("rect",{"class":"zone",x:387,y:154,width:198,height:203});
+el("rect",{"class":"zone",x:388,y:388,width:197,height:154});
+ARROWS.forEach(function(d){el("path",{d:d,"marker-end":"url(#ah)"});});
+el("rect",{"class":"fx",x:214,y:503,width:90,height:22});
+LABELS.forEach(function(l){var t=el("text",{x:l[0],y:l[1],"class":l[3]||""});t.textContent=l[2];});
+
+var sel=null,state=[],groups=[];
+BLANKS.forEach(function(b,i){
+  var g=el("g",{tabindex:0,role:"button","aria-label":"Empty box "+(i+1)});
+  var r=el("rect",{"class":"bk",x:b[0]-b[2]/2,y:b[1]-11,width:b[2],height:22,rx:3},g);
+  var t=el("text",{"class":"bt",x:b[0],y:b[1]+3.5},g);t.textContent="?";
+  g.onclick=function(){place(i);};
+  g.onkeydown=function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();place(i);}};
+  groups.push({g:g,t:t});state.push(null);
+});
+function draw(i){
+  var o=groups[i];
+  o.t.textContent=state[i]?short(state[i]):"?";
+  o.g.setAttribute("class",state[i]?"fill":"");
+  o.g.setAttribute("aria-label",state[i]?"Box "+(i+1)+": "+state[i]:"Empty box "+(i+1));
+}
+function place(i){
+  if(sel!==null){state[i]=sel;}else if(state[i]){state[i]=null;}
+  draw(i);document.getElementById("score").textContent="";
+}
+var bank=document.getElementById("bank");
+WORDS.forEach(function(w){
+  var b=document.createElement("button");b.className="chip";b.textContent=w;b.setAttribute("aria-pressed","false");
+  b.onclick=function(){
+    var was=sel===w;sel=was?null:w;
+    [].forEach.call(bank.children,function(c){c.setAttribute("aria-pressed",c.textContent===sel);});
+  };
+  bank.appendChild(b);
+});
+document.getElementById("chk").onclick=function(){
+  var n=0,empty=0;
+  BLANKS.forEach(function(b,i){
+    if(!state[i]){empty++;return;}
+    var ok=state[i]===b[3];if(ok)n++;
+    groups[i].g.setAttribute("class",ok?"good":"bad");
+  });
+  document.getElementById("score").textContent=n+" of "+BLANKS.length+" correct"+(empty?" ("+empty+" empty)":"")+(n===BLANKS.length?". Excellent!":". Red boxes need another look.");
+};
+document.getElementById("show").onclick=function(){
+  BLANKS.forEach(function(b,i){state[i]=b[3];draw(i);});
+  document.getElementById("score").textContent="Answers shown.";
+};
+document.getElementById("rst").onclick=function(){
+  BLANKS.forEach(function(b,i){state[i]=null;draw(i);});
+  document.getElementById("score").textContent="";
+};
+
+/* ---------- Part 2: quiz ---------- */
+var QS=[
+{q:"A fetus has a placental aromatase deficiency. Compared with a normal pregnancy, what would you expect?",a:1,o:[
+["Progesterone decreased; estrogens (E1, E2, E3) unchanged","Progesterone is made by SCC and conversion of pregnenolone, steps upstream of aromatase, so it is not reduced. Estrogens cannot be unchanged because aromatase is required to make them."],
+["Progesterone normal; E1, E2 and E3 all decreased; DHEA and androstenedione build up","Aromatase converts androstenedione to E1 (and then E2) and 16\u03B1OH-androstenedione to E3. Blocking it stops all estrogens, while the androgen precursors accumulate."],
+["Progesterone normal; E3 decreased but E1 and E2 normal","This pattern fits a 16\u03B1-hydroxylase deficiency. Aromatase is needed in both the E1/E2 branch and the E3 branch, so all estrogens fall."],
+["Both progesterone and estrogens decreased","Aromatase is not part of the progesterone pathway, so progesterone synthesis is unaffected."]]},
+{q:"The fetal adrenal gland fails to develop. What happens to progesterone and estrogen synthesis?",a:3,o:[
+["Progesterone markedly decreased; estrogens normal","The placenta makes progesterone from maternal cholesterol without fetal help, so it stays normal. Estrogens depend on fetal DHEA-S, so they cannot be normal."],
+["Both progesterone and estrogens markedly decreased","Only estrogens fall. Progesterone synthesis (cholesterol, SCC, pregnenolone, progesterone) is entirely placental."],
+["Progesterone normal; only E3 decreased, E1 and E2 normal","Selective loss of E3 describes a fetal liver 16\u03B1-hydroxylase defect. The adrenal supplies DHEA-S for all estrogens, and the placenta cannot make its own DHEA because it lacks 17\u03B1-hydroxylase."],
+["Progesterone normal; E1, E2 and E3 markedly decreased","The placenta still makes progesterone, but without fetal adrenal DHEA-S it has no substrate for sulfatase and aromatase, so every estrogen drops."]]},
+{q:"The fetal liver has a 16\u03B1-hydroxylase deficiency. What would you expect?",a:0,o:[
+["Progesterone normal; E3 markedly decreased; E1 and E2 largely preserved","16\u03B1-hydroxylation of DHEA-S in the fetal liver is the only route to E3. DHEA-S from the adrenal can still reach the placenta and be converted to E1 and E2, and progesterone is unaffected."],
+["Progesterone normal; E1 and E2 decreased; E3 normal","This is reversed. The E1/E2 branch does not use 16\u03B1-hydroxylase, and E3 cannot be made without it."],
+["Progesterone and all estrogens decreased","Progesterone is unaffected by a fetal liver enzyme, and E1 and E2 are still produced from adrenal DHEA-S."],
+["Progesterone decreased; estrogens normal","Progesterone is unaffected, and E3 specifically is reduced, so estrogens are not all normal."]]},
+{q:"The placenta has a sulfatase deficiency. What happens to progesterone and estrogen synthesis?",a:2,o:[
+["Progesterone decreased; estrogens increased","Sulfatase acts only in the estrogen pathway. Progesterone is unaffected, and estrogens cannot increase when their substrates are blocked."],
+["Progesterone normal; estrogens increased because DHEA-S accumulates","DHEA-S is sulfated and cannot be used by aromatase. Without sulfatase to remove the sulfate, accumulation does not generate more estrogen."],
+["Progesterone normal; E1, E2 and E3 all decreased; DHEA-S and 16\u03B1OH-DHEA-S accumulate","Sulfatase removes sulfate from DHEA-S and from 16\u03B1OH-DHEA-S. Without it, neither branch can proceed, so all estrogens fall while the sulfated precursors accumulate."],
+["Progesterone normal; only E3 decreased","Sulfatase is used in both branches (DHEA-S to DHEA, and 16\u03B1OH-DHEA-S to 16\u03B1OH-DHEA), so E1 and E2 fall as well."]]},
+{q:"The placenta has an SCC (cholesterol side-chain cleavage) deficiency. What would you expect in this model?",a:1,o:[
+["Progesterone normal; estrogens decreased","Progesterone cannot be normal. SCC makes pregnenolone, the precursor of progesterone."],
+["Progesterone and estrogens both decreased","SCC is the first step. Without pregnenolone there is no progesterone, and no pregnenolone reaches the fetal adrenal to make DHEA-S for estrogen synthesis."],
+["Progesterone decreased; estrogens normal","Estrogens also depend on pregnenolone, which becomes fetal DHEA-S, so they fall too."],
+["Progesterone increased; estrogens decreased","Nothing makes extra progesterone. A block at the first step lowers everything downstream."]]}
+];
+var quiz=document.getElementById("quiz"),done=0,right=0;
+function build(){
+  quiz.innerHTML="";done=0;right=0;
+  document.getElementById("qscore").textContent="";document.getElementById("qrst").hidden=true;
+  QS.forEach(function(Q,qi){
+    var d=document.createElement("div");d.className="q";
+    var h=document.createElement("h3");h.textContent=(qi+1)+". "+Q.q;d.appendChild(h);
+    var btns=[],notes=[];
+    Q.o.forEach(function(o,oi){
+      var b=document.createElement("button");b.className="opt";b.textContent=String.fromCharCode(65+oi)+". "+o[0];
+      var n=document.createElement("div");n.className="why";n.hidden=true;
+      var ok=oi===Q.a;n.classList.add(ok?"r":"w");
+      n.innerHTML="<b class='"+(ok?"r":"w")+"'>"+(ok?"Correct. ":"Why this is wrong: ")+"</b>";
+      n.appendChild(document.createTextNode(o[1]));
+      b.onclick=function(){
+        btns.forEach(function(x,xi){x.disabled=true;notes[xi].hidden=false;
+          if(xi===Q.a)x.classList.add("right");else if(x===b)x.classList.add("wrong");});
+        done++;if(oi===Q.a)right++;
+        if(done===QS.length){document.getElementById("qscore").textContent="Score: "+right+" of "+QS.length;document.getElementById("qrst").hidden=false;}
+      };
+      btns.push(b);notes.push(n);d.appendChild(b);d.appendChild(n);
+    });
+    quiz.appendChild(d);
+  });
+}
+document.getElementById("qrst").onclick=build;
+build();
+</script>
+</body>
+</html>
